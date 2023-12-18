@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 let taskSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "userModel",
+    ref: "User",
   },
   tasks: [
     {
@@ -23,7 +23,6 @@ let taskSchema = new mongoose.Schema({
         type: Date,
         required: true,
       },
-      reminders: [subSchema],
     },
   ],
 });

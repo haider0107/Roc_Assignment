@@ -1,13 +1,21 @@
 import "./index.css";
-import BarChart from "./components/BarChart";
-import data from "./output.json"
+import { Routes, Route } from "react-router-dom";
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
+import PrivateRoutes from "./pages/PrivateRoutes";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
   return (
-    <div>
-      <h2>Total Time Spent by Features</h2>
-      <BarChart data={data} />
-    </div>
+    <>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/register" element={<Signup />} />
+        <Route element={<PrivateRoutes />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+      </Routes>
+    </>
   );
 }
 

@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
   },
   tasks: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "TaskModel",
+    ref: "Task",
   },
 });
 
