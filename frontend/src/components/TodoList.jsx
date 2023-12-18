@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import SingleTodo from "./SingleTodo";
 import { IoMdAdd } from "react-icons/io";
 import { Droppable } from "react-beautiful-dnd";
+import { useDisclosure } from "@chakra-ui/react";
+import AddModal from "./modal/AddModal";
 
 function TodoList({
   todos,
@@ -10,9 +12,26 @@ function TodoList({
   setOnHoldtodos,
   inProgressTodos,
   setInProgressTodos,
+  fetchAgain,
+  setFetchAgain,
 }) {
+  const [status, setStatus] = useState("New");
+  const {
+    isOpen: isAddOpen,
+    onOpen: onAddOpen,
+    onClose: onAddClose,
+  } = useDisclosure();
+
   return (
     <div className="flex flex-col md:flex-row justify-between items-start w-[100%] ">
+      <AddModal
+        isAddOpen={isAddOpen}
+        onAddClose={onAddClose}
+        onAddOpen={onAddOpen}
+        fetchAgain={fetchAgain}
+        setFetchAgain={setFetchAgain}
+        status={status}
+      />
       <Droppable droppableId="New">
         {(provided) => (
           // New
@@ -25,7 +44,13 @@ function TodoList({
               <span className="text-[30px] text-slate-600 font-medium">
                 New
               </span>{" "}
-              <IoMdAdd className=" text-[20px] cursor-pointer" />
+              <IoMdAdd
+                onClick={() => {
+                  setStatus("New");
+                  onAddOpen();
+                }}
+                className=" text-[20px] cursor-pointer"
+              />
             </div>
             {todos.map((ele, index) => (
               <SingleTodo
@@ -52,7 +77,13 @@ function TodoList({
               <span className="text-[30px] text-slate-600 font-medium">
                 On Hold
               </span>
-              <IoMdAdd className="text-[20px] cursor-pointer" />
+              <IoMdAdd
+                onClick={() => {
+                  setStatus("On-Hold");
+                  onAddOpen();
+                }}
+                className="text-[20px] cursor-pointer"
+              />
             </div>
             {onHoldtodos.map((ele, index) => (
               <SingleTodo
@@ -79,7 +110,13 @@ function TodoList({
               <span className="text-[30px] text-slate-600 font-medium">
                 In Progress
               </span>
-              <IoMdAdd className="text-[20px] cursor-pointer" />
+              <IoMdAdd
+                onClick={() => {
+                  setStatus("In-Progress");
+                  onAddOpen();
+                }}
+                className="text-[20px] cursor-pointer"
+              />
             </div>
             {inProgressTodos.map((ele, index) => (
               <SingleTodo

@@ -1,12 +1,44 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleLogin = (e) => {
-    e.preventDefault();
-    console.log(email,password);
+  useEffect(() => {
+    async function authCheck() {
+      try {
+        if (localStorage.getItem("token")) {
+          await axios.get("/api/v1/users/auth", {
+            headers: {
+              "auth-token": JSON.parse(localStorage.getItem("token")),
+            },
+          });
+          navigate("/dashboard");
+        }
+      } catch (error) {
+        console.log(error);
+        localStorage.removeItem("token");
+      }
+    }
+    authCheck();
+  }, [navigate]);
+
+  const handleLogin = async (e) => {
+    try {
+      e.preventDefault();
+      let data = {
+        email,
+        password,
+      };
+      let res = await axios.post("/api/v1/users/login", data);
+      localStorage.setItem("token", JSON.stringify(res.data.token));
+      navigate("/dashboard");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

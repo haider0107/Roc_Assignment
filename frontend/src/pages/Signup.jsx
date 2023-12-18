@@ -1,18 +1,28 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Signup() {
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
+  const navigate = useNavigate();
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     try {
-        e.preventDefault();
-        console.log(email,name,password);
+      e.preventDefault();
+      let data = {
+        name,
+        email,
+        password,
+      };
+      let res = await axios.post("/api/v1/users/register", data);
+      console.log(res.data);
+      navigate("/");
     } catch (error) {
-        console.log(error);
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div class="flex justify-center items-center h-screen bg-indigo-600">
@@ -22,7 +32,7 @@ function Signup() {
         </h1>
         {/* <hr class="mt-3"> */}
         <form onSubmit={handleSignup}>
-        <div class="mt-3">
+          <div class="mt-3">
             <label for="username" class="block text-base mb-2">
               Name
             </label>
@@ -69,7 +79,7 @@ function Signup() {
           </div>
         </form>
         <div className="mt-4 text-indigo-600 hover:text-indigo-800 text-center">
-          <a href="/register">Don't have an account ?</a>
+          <a href="/">Already have an account ?</a>
         </div>
       </div>
     </div>

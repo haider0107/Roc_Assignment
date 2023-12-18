@@ -1,7 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Navebar from "../components/Navebar";
 import TodoList from "../components/TodoList";
 import { DragDropContext } from "react-beautiful-dnd";
+import axios from "axios";
 
 let data = [
   {
@@ -28,9 +29,41 @@ let data = [
 ];
 
 function Dashboard() {
-  const [todos, setTodos] = useState(data);
+  const [todos, setTodos] = useState([]);
   const [onHoldtodos, setOnHoldtodos] = useState([]);
   const [inProgressTodos, setInProgressTodos] = useState([]);
+  const [fetchAgain, setFetchAgain] = useState(false);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        let res = await axios.get("/api/v1/tasks/", {
+          headers: {
+            "auth-token": JSON.parse(localStorage.getItem("token")),
+          },
+        });
+
+        let active = [],
+          hold = [],
+          progress = [];
+        res.data.tasks.tasks.forEach((ele) => {
+          if (ele.status === "New") {
+            active.push(ele);
+          } else if (ele.status === "On-Hold") {
+            hold.push(ele);
+          } else {
+            progress.push(ele);
+          }
+        });
+        setTodos(active);
+        setOnHoldtodos(hold);
+        setInProgressTodos(progress);
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    fetchData();
+  }, []);
 
   const onDragEnd = (result) => {
     const { source, destination } = result;
@@ -82,6 +115,8 @@ function Dashboard() {
           setOnHoldtodos={setOnHoldtodos}
           inProgressTodos={inProgressTodos}
           setInProgressTodos={setInProgressTodos}
+          fetchAgain={fetchAgain}
+          setFetchAgain={setFetchAgain}
         />
       </DragDropContext>
     </div>

@@ -29,7 +29,7 @@ function SingleTodo({ ele, todos, setTodos, index }) {
   };
 
   return (
-    <Draggable draggableId={ele.id.toString()} index={index}>
+    <Draggable draggableId={ele._id} index={index}>
       {(provided) => (
         <form
           {...provided.draggableProps}
@@ -48,13 +48,13 @@ function SingleTodo({ ele, todos, setTodos, index }) {
             <s className="md:flex-1 p-1 border-none text-[20px]">{ele.todo}</s>
           ) : (
             <span className="flex-1 p-1 border-none text-[20px]">
-              {ele.todo}
+              {ele.taskName}
             </span>
           )}
           <span
             className="ml-3 text-[25px] cursor-pointer"
             onClick={() => {
-              if (!edit && !ele.isDone) {
+              if (!edit && !ele.isCompleted) {
                 setEdit(!edit);
               }
             }}
@@ -63,13 +63,13 @@ function SingleTodo({ ele, todos, setTodos, index }) {
           </span>
           <span
             className="ml-3 text-[25px] cursor-pointer"
-            onClick={() => handleDelete(ele.id)}
+            onClick={() => handleDelete(ele._id)}
           >
             <MdDelete />
           </span>
           <span
             className="ml-3 text-[25px] cursor-pointer"
-            onClick={() => handleDone(ele.id)}
+            onClick={() => handleDone(ele._id)}
           >
             <MdFileDownloadDone />
           </span>
